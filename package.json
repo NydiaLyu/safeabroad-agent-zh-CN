@@ -1,0 +1,25 @@
+{
+  "name": "safeabroad-agent",
+  "version": "0.1.0",
+  "private": false,
+  "description": "A trauma-informed, privacy-first emergency documentation agent for international students overseas.",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "agent",
+    "safety",
+    "international-students",
+    "trauma-informed",
+    "privacy-first",
+    "documentation"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.9",
+    "zod": "^3.24.1"
+  }
+}

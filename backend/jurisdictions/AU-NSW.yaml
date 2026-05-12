@@ -1,0 +1,21 @@
+id: AU-NSW
+country: Australia
+state: NSW
+emergency:
+  emergency_number: "000"
+  non_emergency_police: "131 444"
+victim_support:
+  name: NSW Victims Support Scheme
+  required_documents:
+    - police_event_number
+    - medical_evidence
+    - receipts
+    - identity_document
+university_support:
+  documents:
+    - police_event_number
+    - medical_certificate
+    - personal_statement
+legal_disclaimer:
+  text: This tool provides general information only and is not legal advice.
+

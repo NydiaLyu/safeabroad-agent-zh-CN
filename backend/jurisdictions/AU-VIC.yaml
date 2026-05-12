@@ -1,0 +1,9 @@
+id: AU-VIC
+country: Australia
+state: VIC
+emergency:
+  emergency_number: "000"
+  non_emergency_police: "131 444"
+legal_disclaimer:
+  text: This tool provides general information only and is not legal advice.
+
