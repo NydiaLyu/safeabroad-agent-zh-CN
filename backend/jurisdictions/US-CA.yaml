@@ -1,0 +1,8 @@
+id: US-CA
+country: United States
+state: California
+emergency:
+  emergency_number: "911"
+legal_disclaimer:
+  text: This tool provides general information only and is not legal advice.
+

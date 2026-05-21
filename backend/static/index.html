@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SafeAbroad 留学生事件材料助手</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <h1>SafeAbroad 留学生事件材料助手</h1>
+        <p>中文填写事件经过，生成英文材料草稿。所有英文内容必须由用户检查确认后再使用。</p>
+      </div>
+      <div class="top-actions">
+        <button id="apiSettingsBtn" class="secondary small-button">模型 API 设置</button>
+        <a href="/docs" class="api-link">API 文档</a>
+      </div>
+    </header>
+
+    <div id="apiModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="apiModalTitle">
+      <div class="modal-card">
+        <div class="section-title">
+          <h2 id="apiModalTitle">模型 API 设置</h2>
+          <button id="closeApiModalBtn" class="secondary small-button">关闭</button>
+        </div>
+        <p class="hint">选择常用服务商并填写 API Key。保存后页面只显示尾号，不会在界面里展示完整 key。</p>
+        <label>
+          服务商
+          <select id="apiProviderSelect">
+            <option value="qwen">阿里云百炼 / 通义千问</option>
+            <option value="openai">OpenAI</option>
+            <option value="anthropic">Anthropic</option>
+            <option value="openai_compatible">自定义 OpenAI-compatible</option>
+          </select>
+        </label>
+        <label>
+          API Key
+          <input id="apiKeyInput" type="password" placeholder="sk-..." autocomplete="off" />
+        </label>
+        <label>
+          模型
+          <input id="apiModelInput" value="qwen-plus" />
+        </label>
+        <label>
+          Base URL
+          <input id="apiBaseUrlInput" value="https://dashscope.aliyuncs.com/compatible-mode/v1" />
+        </label>
+        <div class="quick-actions">
+          <button type="button" class="secondary small-button" data-provider-preset="qwen">千问</button>
+          <button type="button" class="secondary small-button" data-provider-preset="openai">OpenAI</button>
+          <button type="button" class="secondary small-button" data-provider-preset="anthropic">Anthropic</button>
+        </div>
+        <button id="saveApiSettingsBtn">保存 API 配置</button>
+        <pre id="apiSettingsStatus" class="result">尚未检查配置。</pre>
+      </div>
+    </div>
+
+    <main class="layout">
+      <section class="panel">
+        <h2>1. 基本信息</h2>
+        <div class="notice">
+          本工具只帮助整理信息和生成草稿，不提供法律、医疗、心理、移民或紧急服务建议。紧急情况请立即联系当地紧急服务。
+        </div>
+        <div class="grid">
+          <label>姓名<input id="name" placeholder="可留空" /></label>
+          <label>学校<input id="university" placeholder="University" /></label>
+          <label>国家<input id="country" value="Australia" /></label>
+          <label>州/省<input id="state" value="NSW" /></label>
+          <label>城市<input id="city" value="Sydney" /></label>
+          <label>Police Event Number<input id="eventNumber" placeholder="如已有" /></label>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>2. 安全分流</h2>
+        <div class="checks">
+          <label><input type="checkbox" id="currentDanger" /> 我现在仍处于危险中</label>
+          <label><input type="checkbox" id="seriousInjury" /> 我有严重伤情</label>
+          <label><input type="checkbox" id="offenderNearby" /> 对方仍在附近</label>
+          <label><input type="checkbox" id="needsAmbulance" /> 我可能需要救护车或尽快就医</label>
+        </div>
+        <button id="triageBtn">检查当前风险</button>
+        <pre id="triageResult" class="result"></pre>
+      </section>
+
+      <section class="panel wide">
+        <h2>3. 中文讲述</h2>
+        <p class="hint">按你记得的说即可。不确定可以写“不确定”，不要为了完整而猜测。</p>
+        <textarea id="narrative" rows="7">对方先拿了我的薯条，我问他干嘛，他说你想怎样，然后推了我。</textarea>
+        <button id="analyzeBtn">生成时间线和下一步问题</button>
+      </section>
+
+      <section class="panel">
+        <h2>4. 中文时间线</h2>
+        <p class="hint">可以直接改字、修改确定性，或拖动左侧序号调整顺序。</p>
+        <ol id="timeline"></ol>
+        <button id="saveTimelineBtn" disabled>保存时间线修改</button>
+        <button id="reconstructBtn" class="secondary" disabled>还原完整案发经过</button>
+        <pre id="reconstructResult" class="result"></pre>
+      </section>
+
+      <section class="panel">
+        <h2>5. 追问补充案发经过</h2>
+        <p class="hint">系统会先检查时间线顺序、逻辑矛盾和关键缺口。你可以一直补充，直到没有明显矛盾，或点击结束追问。</p>
+        <div id="nextQuestion" class="question">等待生成</div>
+        <label class="answer-box">
+          回复这条追问或补充一个片段
+          <textarea id="followupAnswer" rows="4" placeholder="例如：用户旁边的人出声制止了对方拿走薯条的行为。"></textarea>
+        </label>
+        <button id="answerBtn" disabled>提交回复并补充到时间线</button>
+        <button id="finishFollowupBtn" class="secondary" disabled>结束追问前复核完整经过</button>
+        <pre id="followupStatus" class="result"></pre>
+        <section id="finalReviewPanel" class="review-panel hidden">
+          <h3>结束追问前，请复核完整案发经过</h3>
+          <p class="hint">请确认以下还原是否符合你的记忆。勾选你认为不确定的事件；如果不确定范围仍然太模糊，请回到追问框继续补充。</p>
+          <div id="finalStory" class="question"></div>
+          <div id="uncertainChoices" class="uncertain-list"></div>
+          <button id="confirmFinishBtn">确认复核并结束追问</button>
+        </section>
+      </section>
+
+      <section class="panel wide">
+        <h2>6. 可用证据整理</h2>
+        <p class="hint">系统会根据时间线、追问回复和你的补充判断可能有用的证据，并给出简单收集教程。</p>
+        <label>
+          你认为可用的证据或线索
+          <textarea id="evidenceNote" rows="4" placeholder="例如：我们在麦当劳监控底下；旁边有两个路人；我有付款记录。"></textarea>
+        </label>
+        <button id="evaluateEvidenceBtn" disabled>评估证据并生成建议清单</button>
+        <div id="evidenceSummary" class="question">等待评估</div>
+        <div id="evidenceCards" class="evidence-cards"></div>
+      </section>
+
+      <section class="panel wide">
+        <h2>7. 后续支持、索赔与出庭准备</h2>
+        <p class="hint">提供官方路径和材料准备清单；不预测对方是否会被起诉、出庭、定罪或判刑。</p>
+        <button id="supportGuidanceBtn" disabled>生成后续支持指导</button>
+        <div id="supportDisclaimer" class="notice">等待生成。</div>
+        <div id="supportPathways" class="evidence-cards"></div>
+        <div id="supportLinks" class="link-list"></div>
+      </section>
+
+      <section class="panel wide">
+        <div class="section-title">
+          <h2>8. 英文材料草稿</h2>
+          <button id="generateBtn">生成给警察/医生/学校的英文材料</button>
+        </div>
+        <p class="hint">请逐段检查英文文本。确认事实属实、不确定信息已标明后，再勾选确认。</p>
+        <div id="documents" class="documents"></div>
+        <button id="reviewBtn" disabled>保存我的检查确认</button>
+        <pre id="reviewResult" class="result"></pre>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

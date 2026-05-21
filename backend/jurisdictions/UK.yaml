@@ -1,0 +1,8 @@
+id: UK
+country: United Kingdom
+emergency:
+  emergency_number: "999"
+  non_emergency_police: "101"
+legal_disclaimer:
+  text: This tool provides general information only and is not legal advice.
+
