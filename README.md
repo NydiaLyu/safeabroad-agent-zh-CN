@@ -84,7 +84,7 @@ The example intentionally preserves uncertainty instead of turning unclear memor
 
 ## Architecture 
 
-```text
+```
 safeabroad-agent/
 ├── backend/
 │   ├── agents/            # deterministic agent modules
@@ -105,22 +105,51 @@ safeabroad-agent/
 
 The current runnable app is a FastAPI backend with a static browser UI. The TypeScript `lib/` layer documents stable agent contracts and schemas for future SDK, Next.js, or PWA implementations.
 
+## 🚀 No-Code Usage: Prompt Framework 无编程基础的使用方式：提示词框架
+
+为了便于无编程基础的小伙伴们使用，将SafeAbroad Agent 的核心逻辑和工作流抽象为**通用提示词框架**，复制粘贴(prompt-framework/SYSTEM_PROMPT.md)至任意现有AI工具中，即可开启对话。
+
+> **Note**: While the prompt framework provides immediate access to SafeAbroad's methodology, the full application offers additional features like local data storage, structured timeline editing, evidence checklist management, and API integration with multiple LLM providers. For formal case documentation, we recommend using the complete application.
+>
+> **注意**: 虽然提示词框架有助于紧急情况下、无编程基础情况下的使用，但完整程序还提供了更多功能，如本地数据存储、结构化时间线编辑、证据清单管理以及与多个LLM提供商的API集成。对于正式的案件记录，建议使用完整的应用程序。
+
+### Multi-Language Support | 多语言支持
+
+The prompt framework has been tested and optimized for multiple languages:
+
+该提示词框架已在多种语言环境中测试并优化：
+
+- ✅ **Chinese (中文)** - Default interaction language
+- ✅ **English (英文)** - Default document language
+- ✅ **Japanese (日本語)** - Tested and working well
+- ✅ **German (Deutsch)** - Tested and working well
+- ✅ **Thai (ไทย)** - Tested and working well
+- 🔄 More languages coming soon...
+
+At the start of each session, you can specify:
+- **Interaction Language**: The language for conversation during the interview process
+- **Document Language(s)**: The language(s) for generating official documents
+
+每次会话开始时，您可以指定：
+- **交互语言**: 问询过程中对话使用的语言
+- **文书语言**: 生成正式文书使用的语言（可多选）
+
 ## Quick Start
 
-```powershell
+```
 python -m pip install -r requirements.txt
 python -m uvicorn backend.main:app --host 127.0.0.1 --port 8002
 ```
 
 Open:
 
-```text
+```
 http://127.0.0.1:8002/
 ```
 
 API docs:
 
-```text
+```
 http://127.0.0.1:8002/docs
 ```
 
@@ -130,13 +159,13 @@ The app can run with deterministic fallback logic, but LLM calls improve timelin
 
 Create `.env` locally:
 
-```powershell
+```
 Copy-Item .env.example .env
 ```
 
 Example Qwen-compatible settings:
 
-```text
+```
 LLM_PROVIDER=qwen
 DASHSCOPE_API_KEY=your-dashscope-key
 QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
@@ -149,13 +178,13 @@ Never commit `.env` or API keys. The web UI also includes a local API settings m
 
 Python workflow tests:
 
-```powershell
+```
 python -m pytest backend/tests
 ```
 
 TypeScript reference tests:
 
-```powershell
+```
 npm install
 npm test
 ```
