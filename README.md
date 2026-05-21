@@ -107,7 +107,7 @@ The current runnable app is a FastAPI backend with a static browser UI. The Type
 
 ## 🚀 No-Code Usage: Prompt Framework 无编程基础的使用方式：提示词框架
 
-为了便于无编程基础的小伙伴们使用，将SafeAbroad Agent 的核心逻辑和工作流抽象为**通用提示词框架**，复制粘贴(prompt-framework/SYSTEM_PROMPT.md)至任意现有AI工具中，即可开启对话。
+为了便于无编程基础的小伙伴们使用，将SafeAbroad Agent 的核心逻辑和工作流抽象为**通用提示词框架**，复制粘贴[SYSTEM_PROMPT.md](prompt-framework/SYSTEM_PROMPT.md)全部内容至任意现有AI工具中，即可开启对话。
 
 > **Note**: While the prompt framework provides immediate access to SafeAbroad's methodology, the full application offers additional features like local data storage, structured timeline editing, evidence checklist management, and API integration with multiple LLM providers. For formal case documentation, we recommend using the complete application.
 >
